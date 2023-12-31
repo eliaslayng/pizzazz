@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzazz</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f0f0f0; /* Default light background color */
+            color: hwb(49 0% 0%); /* Default text color for light background */
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+        }
+
+        #container {
+            text-align: center;
+        }
+
+        h1 img {
+            max-width: 60%;
+            height: auto;
+            cursor: pointer; /* Add pointer cursor to indicate it's clickable */
+        }
+
+        #urlInput {
+            border-radius: 8px;
+            padding: 8px;
+            background-color: #ffdd4400; /* Pastel yellow background */
+            border: 2px solid hwb(49 0% 0%); /* Normal yellow outline */
+            color: yellow; /* Set the text color to yellow */
+            font-weight: bold; /* Make the text bold */
+            outline: none; /* Remove the default outline */
+        }
+
+        #urlInput::placeholder {
+            color: yellow; /* Set the placeholder text color to yellow */
+            font-weight: bold; /* Make the placeholder text bold */
+        }
+
+        #urlInput:focus {
+            border: 2px solid hwb(49 0% 0%); /* Yellow outline when in focus */
+        }
+
+        #redirectForm button {
+            border-radius: 8px;
+            padding: 8px;
+            background-color: #ffdd4400; /* Pastel yellow background */
+            border: 2px solid hwb(49 0% 0%) /* Normal yellow outline */;
+            color: yellow; /* Set the text color to yellow */
+            font-weight: bold; /* Make the text bold */
+        }
+
+        #googleSearchButton {
+            border-radius: 8px;
+            padding: 8px;
+            background-color: #ffdd4400; /* Pastel yellow background */
+            border: 2px solid hwb(49 0% 0%) /* Normal yellow outline */;
+            color: yellow; /* Set the text color to yellow */
+            font-weight: bold; /* Make the text bold */
+            margin-top: 10px; /* Add some space between the input and the new button */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h1><img src="/home/eli/projects/searchscreen/pizzazz logo.png" alt="Pizzazz Logo" onclick="toggleTheme()"></h1>
+        
+        <form id="redirectForm" onsubmit="redirect(); return false;">
+            <input type="text" id="urlInput" placeholder="Type here..." required>
+            <button type="button" onclick="redirect()">Go!</button>
+
+            <!-- New button for Google search -->
+            <button id="googleSearchButton" type="button" onclick="googleSearch()">Google Search</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to toggle between light and dark themes
+        function toggleTheme() {
+            const body = document.body;
+            const isDarkMode = body.style.backgroundColor === 'rgb(26, 26, 26)';
+
+            if (isDarkMode) {
+                body.style.backgroundColor = '#f0f0f0';
+                body.style.color = 'black';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.style.backgroundColor = '#1a1a1a';
+                body.style.color = 'white';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Function to set the theme based on user's preference
+        function setTheme() {
+            const savedTheme = localStorage.getItem('theme');
+
+            if (savedTheme === 'dark') {
+                document.body.style.backgroundColor = '#1a1a1a';
+                document.body.style.color = 'white';
+            } else {
+                document.body.style.backgroundColor = '#f0f0f0';
+                document.body.style.color = 'black';
+            }
+        }
+
+        // Call setTheme function when the page loads
+        setTheme();
+
+        function redirect() {
+            var userInput = document.getElementById("urlInput").value.trim();
+            
+            // Check if the user input has a domain ending
+            if (!userInput.includes(".")) {
+                // If not, assume '.com' and append it to the input
+                userInput += ".com";
+            }
+
+            // Check if the user input has a protocol or 'www.'
+            if (!userInput.startsWith("http://") && !userInput.startsWith("https://") && !userInput.startsWith("www.")) {
+                // If not, assume https:// and prepend it to the input
+                userInput = "https://" + userInput;
+            }
+
+            window.location.href = userInput;
+        }
+
+        // Function for Google search
+        function googleSearch() {
+            var userInput = document.getElementById("urlInput").value.trim();
+
+            // Redirect to Google search with the user input
+            window.location.href = "https://www.google.com/search?q=" + userInput;
+        }
+
+        // Handle form submission on Enter key press
+        document.getElementById("urlInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                redirect();
+            }
+        });
+
+        // Add event listener to handle the disappearance of the placeholder when the user starts typing
+        document.getElementById("urlInput").addEventListener("input", function() {
+            var placeholder = document.getElementById("urlInput").placeholder;
+            if (placeholder === "Type here...") {
+                document.getElementById("urlInput").placeholder = "";
+            }
+        });
+    </script>
+
+</body>
+</html>
