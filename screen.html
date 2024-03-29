@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/8BtnKCn.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizzazz</title>
+    <title>pizzazz!</title>
     <style>
         body {
             display: flex;
@@ -13,8 +14,13 @@
             margin: 0;
             font-family: sans-serif;
             background-color: #f0f0f0; /* Default light background color */
-            color: hwb(49 0% 0%); /* Default text color for light background */
+            color: hwb(0 0% 100%); /* Default text color for light background */
             transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+        }
+
+        body.dark-mode {
+            background-color: #1a1a1a; /* Dark mode background color */
+            color: rgba(255, 255, 255, 0.506); /* Text color for dark mode */
         }
 
         #container {
@@ -28,48 +34,58 @@
         }
 
         #urlInput {
+            border: none; /* Remove the default border */
             border-radius: 8px;
             padding: 8px;
-            background-color: #ffdd4400; /* Pastel yellow background */
-            border: 2px solid hwb(49 0% 0%); /* Normal yellow outline */
-            color: hwb(49 0% 0%); /* Set the text color to yellow */
+            background-color: rgba(0, 0, 0, 0.1); /* Light grey background in light mode */
+            color: black; /* Set the text color back to black */
             font-weight: bold; /* Make the text bold */
             outline: none; /* Remove the default outline */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
 
         #urlInput::placeholder {
-            color: hwb(49 0% 0%); /* Set the placeholder text color to yellow */
+            color: black; /* Set the placeholder text color to black */
             font-weight: bold; /* Make the placeholder text bold */
         }
 
-        #urlInput:focus {
-            border: 2px solid hwb(49 0% 0%); /* Yellow outline when in focus */
-        }
-
-        #redirectForm button {
+        #redirectForm button, #googleSearchButton {
+            border: none; /* Remove the default border */
             border-radius: 8px;
             padding: 8px;
-            background-color: #ffdd4400; /* Pastel yellow background */
-            border: 2px solid hwb(49 0% 0%) /* Normal yellow outline */;
-            color: hwb(49 0% 0%); /* Set the text color to yellow */
+            color: black; /* Set the text color to black */
+            background-color: rgba(0, 0, 0, 0.1); /* Light grey background in light mode */
             font-weight: bold; /* Make the text bold */
+            cursor: pointer; /* Add pointer cursor */
+            outline: none; /* Remove the default outline */
+            transition: background-color 0.3s; /* Smooth transition for background color */
         }
 
-        #googleSearchButton {
-            border-radius: 8px;
-            padding: 8px;
-            background-color: #ffdd4400; /* Pastel yellow background */
-            border: 2px solid hwb(49 0% 0%) /* Normal yellow outline */;
-            color: hwb(49 0% 0%); /* Set the text color to yellow */
-            font-weight: bold; /* Make the text bold */
-            margin-top: 10px; /* Add some space between the input and the new button */
+        #redirectForm button:hover, #googleSearchButton:hover {
+            background-color: var(--button-hover-color); /* Use CSS variable for hover color */
+        }
+
+        body.dark-mode #urlInput,
+        body.dark-mode #redirectForm button,
+        body.dark-mode #googleSearchButton {
+            background-color: rgba(255, 255, 255, 0.1); /* Light grey background in dark mode */
+            color: white; /* Text color for dark mode */
+        }
+
+        body.dark-mode #urlInput::placeholder {
+            color: white; /* Placeholder text color for dark mode */
+        }
+
+        body.dark-mode #redirectForm button:hover,
+        body.dark-mode #googleSearchButton:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Lighten the background color on hover in dark mode */
         }
     </style>
 </head>
 <body>
 
     <div id="container">
-        <h1><img src="https://i.imgur.com/GNGPOYz.png" alt="pizzazz" onclick="toggleTheme()"></h1>
+        <h1><img src="https://i.imgur.com/LulCHsi.png" alt="pizzazz!" onclick="toggleTheme()"></h1>
         
         <form id="redirectForm" onsubmit="redirect(); return false;">
             <input type="text" id="urlInput" placeholder="Type here..." required>
@@ -84,16 +100,16 @@
         // Function to toggle between light and dark themes
         function toggleTheme() {
             const body = document.body;
-            const isDarkMode = body.style.backgroundColor === 'rgb(26, 26, 26)';
+            const isDarkMode = body.classList.toggle('dark-mode');
 
             if (isDarkMode) {
-                body.style.backgroundColor = '#f0f0f0';
-                body.style.color = 'black';
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.style.backgroundColor = '#1a1a1a';
-                body.style.color = 'white';
                 localStorage.setItem('theme', 'dark');
+                // Set CSS variable for button hover color in dark mode
+                document.documentElement.style.setProperty('--button-hover-color', 'rgba(255, 255, 255, 0.2)');
+            } else {
+                localStorage.setItem('theme', 'light');
+                // Reset CSS variable for button hover color in light mode
+                document.documentElement.style.setProperty('--button-hover-color', 'rgba(0, 0, 0, 0.2)');
             }
         }
 
@@ -102,11 +118,11 @@
             const savedTheme = localStorage.getItem('theme');
 
             if (savedTheme === 'dark') {
-                document.body.style.backgroundColor = '#1a1a1a';
-                document.body.style.color = 'white';
+                document.body.classList.add('dark-mode');
+                document.documentElement.style.setProperty('--button-hover-color', 'rgba(255, 255, 255, 0.2)');
             } else {
-                document.body.style.backgroundColor = '#f0f0f0';
-                document.body.style.color = 'black';
+                document.body.classList.remove('dark-mode');
+                document.documentElement.style.setProperty('--button-hover-color', 'rgba(0, 0, 0, 0.2)');
             }
         }
 
